@@ -1,12 +1,14 @@
 import os
+import sys
 import json
 import configparser
 from pathlib import Path
-
-from typing import Optional, List, Any
 from __future__ import annotations
+from typing import Optional, List, Any, Union
 
+import toml
 import yaml
+import redis
 import dotenv
 
 
@@ -21,12 +23,21 @@ class ConfigManager:
         config_paths: List[str] = [],
     ):
         """
-        :param config_file: The config file to parse, without the extension
-        :param config_file_type: The type of config file to parse. If not specified, will try to guess.
+        :param config_file: The config file name to parse, without the extension.
+        :param config_file_type: The type of config file to parse. 
+            If not specified, will try to guess. Must be one of the following
+            types: `ini`, `toml`, `yaml`, `json`, `env`.
         :param config_paths: A list of paths to search for the config file.
         """
+        # Check the params
+        valid_types = ["ini", "toml", "yaml", "json", "env"]
+        cft = None if config_file_type is None else config_file_type.lower()
+        if cft is not None and cft not in valid_types:
+            raise ValueError(f"`config_file_type` must be one of the following: {valid_types}")
+
+        # Store the params
         self.config_file = config_file
-        self.config_file_type = config_file_type
+        self.config_file_type = cft
         self.config_paths = config_paths
 
         # Stores the data
@@ -53,8 +64,40 @@ class ConfigManager:
         pass
 
     def set(self, key: str, value: Any) -> ConfigManager:
+        """Manually set a value for a key.
+
+        :param key: The key to set the value for
+        :param value: The value to set
+        :returns: The ConfigManager instance
+        """
         self.defaults[key] = value
         return self
+
+    def _get_env(self, key: str, to_upper: bool = True) -> Optional[str]:
+        """
+        :param key: The key to get the value for
+        :param to_upper: Whether or not to convert the value to uppercase
+        :returns: The value associated with the key set as an environment
+            variable, or `None` if it doesn't exist.
+        """
+        k = key.upper() if to_upper else key
+        return os.environ.get(k)
+
+    def _get_flag(self, key: str) -> Optional[str]:
+        pass
+
+    def _get_config(self):
+        pass
+
+    def _get_kvs(self):
+        pass
+
+    def _get_default(self, key: str) -> Optional[Any]:
+        """
+        :param key: Key to get the default value for
+        :returns: The default value for the key, or `None` if it doesn't exist
+        """
+        return self.default_values.get(key)
 
     def get(self, key: str, default: Optional[Any] = None) -> Any:
         # Check if the value was set manually
