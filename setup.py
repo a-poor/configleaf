@@ -29,5 +29,6 @@ setuptools.setup(
         "boto3",
         "python-dotenv",
         "pyyaml",
+        "redis",
     ],
 )
