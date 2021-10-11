@@ -15,9 +15,9 @@ __version__ = "0.0.1"
 
 class ConfigManager:
     def __init__(
-        self, 
-        config_file: Optional[str] = None, 
-        config_file_type: Optional[str] = None, 
+        self,
+        config_file: Optional[str] = None,
+        config_file_type: Optional[str] = None,
         config_paths: List[str] = [],
     ):
         """
@@ -80,9 +80,6 @@ class ConfigManager:
         # Check if a default value was set
         if key in self.default_values:
             return self.default_values[key]
-        
+
         # Return the default value
         return default
-
-
-
