@@ -16,11 +16,13 @@ __version__ = "0.0.1"
 
 
 class ConfigManager:
+    valid_types = ["ini", "toml", "yaml", "json", "env"]
+
     def __init__(
         self,
         config_file: Optional[str] = None,
         config_file_type: Optional[str] = None,
-        config_paths: List[str] = [],
+        config_paths: List[str] = ["."],
     ):
         """
         :param config_file: The config file name to parse, without the extension.
@@ -30,10 +32,9 @@ class ConfigManager:
         :param config_paths: A list of paths to search for the config file.
         """
         # Check the params
-        valid_types = ["ini", "toml", "yaml", "json", "env"]
         cft = None if config_file_type is None else config_file_type.lower()
-        if cft is not None and cft not in valid_types:
-            raise ValueError(f"`config_file_type` must be one of the following: {valid_types}")
+        if cft is not None and cft not in self.valid_types:
+            raise ValueError(f"`config_file_type` must be one of the following: {self.valid_types}")
 
         # Store the params
         self.config_file = config_file
@@ -54,8 +55,25 @@ class ConfigManager:
     def _parse_flags(self):
         pass
 
-    def _parse_config(self):
+    def _parse_config_json(self):
         pass
+
+    def _parse_config_yaml(self):
+        pass
+
+    def _parse_config_toml(self):
+        pass
+
+    def _parse_config_ini(self):
+        pass
+
+    def _parse_config_env(self):
+        pass
+
+    def _parse_config(self):
+        file_extensions = []
+        for d in self.config_paths:
+            p = Path(d) / self.config_file
 
     def _parse_kvs(self):
         pass

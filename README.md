@@ -62,7 +62,12 @@ Or... feel free to just open an issue with some thoughts or suggestions or even 
 * Remote key/value config stores
   * redis
   * etcd
-  * AWS SecretsManager
   * AWS AppConfig
+  * GCP alternative
+  * Azure alternative
+* Get secret values (separate interface from remote k/v store)
+  * ex AWS SecretsManager
+  * ie Load secret name from a config then get the value from a secrets manager
 * Live reload configs
+* Create a config-loading interface to allow for adding plugins
 
